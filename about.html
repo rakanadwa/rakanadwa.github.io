@@ -3,8 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - Raka Nadwa</title>
+    <title>Personal Blog</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .main-header {
+            background: #008080;
+            padding: 15px 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        nav {
+            display: flex;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+        }
+        nav ul li a.active, nav ul li a:hover {
+            background: white;
+            color: #008080;
+            border-radius: 5px;
+        }
+        .hero {
+            background: url('hero-image.jpg') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+            padding: 150px 20px;
+            position: relative;
+        }
+        .overlay {
+            background: rgba(0, 128, 128, 0.7);
+            padding: 50px;
+            display: inline-block;
+            border-radius: 5px;
+        }
+        .hero h1 {
+            font-size: 36px;
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
@@ -12,7 +70,7 @@
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="#" class="active">About</a></li>
                 <li><a href="categories.html">Categories</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
