@@ -669,19 +669,20 @@
 
 <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
   <div class="portfolio-content h-100">
-    <audio controls class="w-100">
-      <source src="assets/img/ezyZip.mp3" type="audio/mpeg">
-      Browser Anda tidak mendukung pemutar audio.
-    </audio>
+    <div class="hidden-audio" id="audio-1" style="display: none;">
+      <audio controls style="width: 100%;">
+        <source src="assets/img/ezyZip.mp3" type="audio/mpeg">
+        Browser Anda tidak mendukung pemutar audio.
+      </audio>
+    </div>
     <div class="portfolio-info">
       <h4>Audio 1</h4>
       <p>MP3</p>
-      <a href="assets/audio/uts.mp3" title="Dengarkan Audio" data-gallery="portfolio-gallery-audio" class="glightbox preview-link"><i class="bi bi-play-circle"></i></a>
+      <a href="#audio-1" class="glightbox preview-link" data-glightbox="type: inline"><i class="bi bi-play-circle"></i></a>
       <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
     </div>
   </div>
-</div><!-- End Portfolio Item -->
-
+</div>
 
             <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-books">
               <div class="portfolio-content h-100">
