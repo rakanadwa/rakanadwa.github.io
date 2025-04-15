@@ -669,16 +669,42 @@
 
 
             <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
-              <div class="portfolio-content h-100">
-                <img src="pp.jpg" class="img-fluid" alt="">
-                <div class="portfolio-info">
-                  <h4>Branding 1</h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                  <a href="assets/img/portfolio/branding-1.jpg" title="Branding 1" data-gallery="portfolio-gallery-branding" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-                  <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
-                </div>
-              </div>
-            </div><!-- End Portfolio Item -->
+  <div class="portfolio-content h-100">
+    <audio class="w-100" controls>
+  <source src="assets/img/ezyZip.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+    <!-- Kotak info/audio -->
+    <div class="portfolio-info p-3 bg-light border rounded shadow-sm">
+      <h4 class="mb-1">Audio 1</h4>
+      <p class="mb-2 text-muted">MP3</p>
+      <div class="d-flex gap-2">
+        <a href="#audio-lightbox-1"
+           class="glightbox btn btn-sm btn-outline-primary"
+           data-type="inline"
+           title="Dengarkan Audio">
+          <i class="bi bi-play-circle me-1"></i> Putar
+        </a>
+        <a href="portfolio-details.html"
+           class="btn btn-sm btn-outline-secondary"
+           title="More Details">
+          <i class="bi bi-link-45deg me-1"></i> Detail
+        </a>
+      </div>
+    </div>
+
+    <!-- Elemen tersembunyi untuk lightbox audio -->
+    <div id="audio-lightbox-1" class="glightbox-inline-content" style="display: none;">
+      <h4>Dengarkan Audio</h4>
+      <audio controls style="width: 100%;">
+        <source src="assets/audio/sample-audio.mp3" type="audio/mpeg">
+        Browser Anda tidak mendukung pemutar audio.
+      </audio>
+    </div>
+
+  </div>
+</div>
 
             <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-books">
               <div class="portfolio-content h-100">
