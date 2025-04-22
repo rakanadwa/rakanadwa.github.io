@@ -405,8 +405,8 @@
     <!-- Format Label -->
     <p class="text-muted mb-2">Format: MP4</p>
     
-    <!-- Video Player -->
-    <video class="img-fluid" controls>
+    <!-- Video Player with Autoplay -->
+    <video class="img-fluid" controls autoplay muted>
       <source src="Video.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
@@ -417,9 +417,7 @@
       <p class="mb-2 text-muted">MP4</p>
       <div class="d-flex gap-2">
         <a href="Video.mp4"
-           class="glightbox btn btn-sm btn-outline-primary"
-           data-gallery="portfolio-gallery-video"
-           data-type="video"
+           class="btn btn-sm btn-outline-primary"
            title="Video Preview">
           <i class="bi bi-play-circle me-1"></i> Watch
         </a>
@@ -432,6 +430,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- 3GP Video Item -->
 <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
