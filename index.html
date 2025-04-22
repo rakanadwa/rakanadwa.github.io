@@ -69,6 +69,148 @@
         <li><a href="#contact"><i class="bi bi-envelope navicon"></i> Contact</a></li>
       </ul>
     </nav>
+    <style>
+  /* Zoom Comparison Modal Styles */
+  .zoom-comparison-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+
+  .zoom-comparison-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2% auto;
+    width: 90%;
+    max-width: 1200px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .zoom-header {
+    width: 100%;
+    padding: 15px;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .zoom-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .zoom-close {
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #555;
+  }
+
+  .zoom-container {
+    display: flex;
+    width: 100%;
+    height: 70vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .zoom-image-container {
+    flex: 1;
+    overflow: auto;
+    position: relative;
+    border-right: 2px solid #dee2e6;
+  }
+
+  .zoom-image-container:last-child {
+    border-right: none;
+  }
+
+  .zoom-image-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .zoom-image {
+    display: block;
+    width: 100%;
+    min-height: 100%;
+    transition: transform 0.3s ease;
+  }
+
+  .zoom-image-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px 15px;
+    font-size: 14px;
+  }
+
+  .zoom-controls {
+    width: 100%;
+    padding: 15px;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    border-top: 1px solid #dee2e6;
+  }
+
+  .zoom-btn {
+    padding: 8px 15px;
+    background-color: #4e73df;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+  }
+
+  .zoom-btn:hover {
+    background-color: #375cbd;
+  }
+
+  .zoom-slider {
+    width: 200px;
+  }
+
+  /* Zoom indicator */
+  .zoom-level {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #666;
+  }
+
+  /* Compare button style */
+  .compare-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #4e73df;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    z-index: 10;
+  }
+</style>
 
   </header>
 
@@ -1094,6 +1236,241 @@
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
 
+  <div id="zoomComparisonModal" class="zoom-comparison-modal">
+  <div class="zoom-comparison-content">
+    <div class="zoom-header">
+      <h3 class="zoom-title">Image Format Comparison</h3>
+      <span class="zoom-close">&times;</span>
+    </div>
+    <div class="zoom-container">
+      <div class="zoom-image-container" id="leftImageContainer">
+        <div class="zoom-image-wrapper">
+          <img src="" alt="Image 1" id="leftZoomImage" class="zoom-image">
+          <div class="zoom-image-info" id="leftImageInfo">Format: JPEG</div>
+        </div>
+      </div>
+      <div class="zoom-image-container" id="rightImageContainer">
+        <div class="zoom-image-wrapper">
+          <img src="" alt="Image 2" id="rightZoomImage" class="zoom-image">
+          <div class="zoom-image-info" id="rightImageInfo">Format: PNG</div>
+        </div>
+      </div>
+    </div>
+    <div class="zoom-controls">
+      <button class="zoom-btn" id="zoomInBtn">Zoom In +</button>
+      <input type="range" min="100" max="400" value="100" class="zoom-slider" id="zoomSlider">
+      <span class="zoom-level" id="zoomLevel">100%</span>
+      <button class="zoom-btn" id="zoomOutBtn">Zoom Out -</button>
+      <button class="zoom-btn" id="resetZoomBtn">Reset</button>
+    </div>
+  </div>
+</div>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Elements
+    const modal = document.getElementById('zoomComparisonModal');
+    const closeBtn = document.querySelector('.zoom-close');
+    const leftImage = document.getElementById('leftZoomImage');
+    const rightImage = document.getElementById('rightZoomImage');
+    const leftInfo = document.getElementById('leftImageInfo');
+    const rightInfo = document.getElementById('rightImageInfo');
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const resetZoomBtn = document.getElementById('resetZoomBtn');
+    const zoomSlider = document.getElementById('zoomSlider');
+    const zoomLevelDisplay = document.getElementById('zoomLevel');
+    
+    // Add Compare buttons to the first two image items (JPEG and PNG)
+    const addCompareButtons = () => {
+      // Find the JPEG image item (first one)
+      const jpegItem = document.querySelector('.filter-app:nth-child(1) .portfolio-content');
+      const pngItem = document.querySelector('.filter-app:nth-child(2) .portfolio-content');
+      
+      if (jpegItem && pngItem) {
+        // Get image paths
+        const jpegImagePath = jpegItem.querySelector('img').src;
+        const pngImagePath = pngItem.querySelector('img').src;
+        
+        // Add Compare button to both items
+        const jpegCompareBtn = document.createElement('button');
+        jpegCompareBtn.className = 'compare-btn';
+        jpegCompareBtn.textContent = 'Compare Formats';
+        jpegItem.appendChild(jpegCompareBtn);
+        
+        const pngCompareBtn = document.createElement('button');
+        pngCompareBtn.className = 'compare-btn';
+        pngCompareBtn.textContent = 'Compare Formats';
+        pngItem.appendChild(pngCompareBtn);
+        
+        // Add click event to compare buttons
+        jpegCompareBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          openComparisonModal(jpegImagePath, pngImagePath, 'JPEG', 'PNG');
+        });
+        
+        pngCompareBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          openComparisonModal(jpegImagePath, pngImagePath, 'JPEG', 'PNG');
+        });
+      }
+    };
+    
+    // Function to open the comparison modal
+    const openComparisonModal = (leftSrc, rightSrc, leftFormat, rightFormat) => {
+      // Set image sources and format info
+      leftImage.src = leftSrc;
+      rightImage.src = rightSrc;
+      leftInfo.textContent = `Format: ${leftFormat}`;
+      rightInfo.textContent = `Format: ${rightFormat}`;
+      
+      // Reset zoom
+      setZoomLevel(100);
+      
+      // Show modal
+      modal.style.display = 'block';
+    };
+    
+    // Close modal
+    closeBtn.addEventListener('click', function() {
+      modal.style.display = 'none';
+    });
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+    
+    // Zoom functionality
+    let currentZoom = 100;
+    
+    const setZoomLevel = (level) => {
+      currentZoom = level;
+      leftImage.style.transform = `scale(${level/100})`;
+      rightImage.style.transform = `scale(${level/100})`;
+      zoomSlider.value = level;
+      zoomLevelDisplay.textContent = `${level}%`;
+    };
+    
+    zoomInBtn.addEventListener('click', function() {
+      const newZoom = Math.min(currentZoom + 25, 400);
+      setZoomLevel(newZoom);
+    });
+    
+    zoomOutBtn.addEventListener('click', function() {
+      const newZoom = Math.max(currentZoom - 25, 100);
+      setZoomLevel(newZoom);
+    });
+    
+    resetZoomBtn.addEventListener('click', function() {
+      setZoomLevel(100);
+    });
+    
+    zoomSlider.addEventListener('input', function() {
+      setZoomLevel(parseInt(this.value));
+    });
+    
+    // Add drag-to-pan functionality for zoomed images
+    const imageContainers = document.querySelectorAll('.zoom-image-container');
+    imageContainers.forEach(container => {
+      let isDragging = false;
+      let startX, startY, scrollLeft, scrollTop;
+      
+      container.addEventListener('mousedown', function(e) {
+        if (currentZoom > 100) {
+          isDragging = true;
+          startX = e.pageX - container.offsetLeft;
+          startY = e.pageY - container.offsetTop;
+          scrollLeft = container.scrollLeft;
+          scrollTop = container.scrollTop;
+        }
+      });
+      
+      container.addEventListener('mouseleave', function() {
+        isDragging = false;
+      });
+      
+      container.addEventListener('mouseup', function() {
+        isDragging = false;
+      });
+      
+      container.addEventListener('mousemove', function(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const y = e.pageY - container.offsetTop;
+        const walkX = (x - startX) * 2; // Adjust speed of panning
+        const walkY = (y - startY) * 2;
+        container.scrollLeft = scrollLeft - walkX;
+        container.scrollTop = scrollTop - walkY;
+      });
+    });
+    
+    // Add comparison buttons to images
+    addCompareButtons();
+    
+    // Add ability to compare any two images
+    const portfolioImages = document.querySelectorAll('.filter-app .portfolio-content img');
+    portfolioImages.forEach(img => {
+      img.addEventListener('click', function(e) {
+        // If the user holds Ctrl/Cmd while clicking
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const selectedImages = document.querySelectorAll('.selected-for-compare');
+          
+          // If this image is already selected, unselect it
+          if (this.classList.contains('selected-for-compare')) {
+            this.classList.remove('selected-for-compare');
+            this.style.border = '';
+            return;
+          }
+          
+          // If already have 2 images selected, deselect the first one
+          if (selectedImages.length >= 2) {
+            selectedImages[0].classList.remove('selected-for-compare');
+            selectedImages[0].style.border = '';
+          }
+          
+          // Select this image
+          this.classList.add('selected-for-compare');
+          this.style.border = '3px solid #4e73df';
+          
+          // If we now have 2 images selected, enable comparison
+          const newSelectedImages = document.querySelectorAll('.selected-for-compare');
+          if (newSelectedImages.length === 2) {
+            const img1 = newSelectedImages[0];
+            const img2 = newSelectedImages[1];
+            
+            // Get format info from closest portfolio-info element
+            const format1 = img1.closest('.portfolio-content').querySelector('.portfolio-info p').textContent;
+            const format2 = img2.closest('.portfolio-content').querySelector('.portfolio-info p').textContent;
+            
+            // Open comparison modal
+            openComparisonModal(img1.src, img2.src, format1, format2);
+            
+            // Deselect all images
+            newSelectedImages.forEach(img => {
+              img.classList.remove('selected-for-compare');
+              img.style.border = '';
+            });
+          }
+        }
+      });
+    });
+    
+    // Add hint about Ctrl+click feature
+    const portfolioSection = document.querySelector('#portfolio .section-title');
+    if (portfolioSection) {
+      const hintText = document.createElement('p');
+      hintText.className = 'compare-hint';
+      hintText.innerHTML = '<small>Tip: Hold Ctrl/Cmd and click on any two images to compare them</small>';
+      portfolioSection.appendChild(hintText);
+    }
+  });
+</script>
 </body>
 
 </html>
