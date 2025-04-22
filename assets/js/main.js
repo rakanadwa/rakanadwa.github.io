@@ -226,4 +226,31 @@
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
 
+ 
+  function updateCompare() {
+    const left = document.getElementById("select-left").value;
+    const right = document.getElementById("select-right").value;
+
+    const isVideo = src => src.endsWith('.mp4') || src.endsWith('.webm') || src.endsWith('.avi') || src.endsWith('.mov') || src.endsWith('.3gp') || src.endsWith('.mkv');
+
+    const leftTag = isVideo(left) ?
+      `<video controls autoplay muted class="img-fluid"><source src="${left}"></video>` :
+      `<img src="${left}" class="img-fluid" alt="Left Image">`;
+
+    const rightTag = isVideo(right) ?
+      `<video controls autoplay muted class="img-fluid"><source src="${right}"></video>` :
+      `<img src="${right}" class="img-fluid" alt="Right Image">`;
+
+    document.getElementById("compare-area").innerHTML = `
+      <div class="col-md-6">${leftTag}</div>
+      <div class="col-md-6">${rightTag}</div>
+    `;
+  }
+
+  document.getElementById("select-left").addEventListener("change", updateCompare);
+  document.getElementById("select-right").addEventListener("change", updateCompare);
+
+  window.addEventListener("load", updateCompare); // load default
+
+
 })();
